@@ -11,6 +11,7 @@ export const THEMES: Record<'mocha' | 'latte', Theme> = {
       text: 'text-[#cdd6f4]',
       subtext: 'text-[#a6adc8]',
       accent: 'text-[#89b4fa]',
+      highlight: 'text-[#fab387]',
       border: 'border-[#45475a]'
     }
   },
@@ -24,6 +25,7 @@ export const THEMES: Record<'mocha' | 'latte', Theme> = {
       text: 'text-[#4c4f69]',
       subtext: 'text-[#6c6f85]',
       accent: 'text-[#1e66f5]',
+      highlight: 'text-[#d08552]',
       border: 'border-[#bcc0cc]'
     }
   }

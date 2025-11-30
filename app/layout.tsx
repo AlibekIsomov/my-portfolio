@@ -32,6 +32,33 @@ export default function RootLayout({
             font-family: 'JetBrains Mono', monospace;
           }
 
+          /* Scrollbar styling */
+          ::-webkit-scrollbar {
+            width: 12px;
+          }
+
+          ::-webkit-scrollbar-track {
+            background: transparent;
+          }
+
+          ::-webkit-scrollbar-thumb {
+            background: #fab387;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+          }
+
+          ::-webkit-scrollbar-thumb:hover {
+            background: #f5a661;
+            background-clip: padding-box;
+          }
+
+          /* Firefox scrollbar */
+          * {
+            scrollbar-color: #fab387 transparent;
+            scrollbar-width: thin;
+          }
+
           /* Animation keyframes */
           @keyframes fadeInUp {
             from {
@@ -75,6 +102,64 @@ export default function RootLayout({
             }
           }
 
+          @keyframes scaleIn {
+            from {
+              opacity: 0;
+              transform: scale(0.95);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          @keyframes rotateIn {
+            from {
+              opacity: 0;
+              transform: rotate(-10deg);
+            }
+            to {
+              opacity: 1;
+              transform: rotate(0deg);
+            }
+          }
+
+          @keyframes shimmer {
+            0% {
+              background-position: -1000px 0;
+            }
+            100% {
+              background-position: 1000px 0;
+            }
+          }
+
+          @keyframes glow {
+            0%, 100% {
+              box-shadow: 0 0 5px rgba(250, 179, 135, 0.2);
+            }
+            50% {
+              box-shadow: 0 0 20px rgba(250, 179, 135, 0.6);
+            }
+          }
+
+          @keyframes float {
+            0%, 100% {
+              transform: translateY(0px);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
+          }
+
+          @keyframes pulse-glow {
+            0%, 100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.5;
+            }
+          }
+
           .animate-fade-in-up {
             animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
@@ -93,6 +178,34 @@ export default function RootLayout({
           .animate-fade-in {
             animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
+          }
+
+          .animate-scale-in {
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+          }
+
+          .animate-rotate-in {
+            animation: rotateIn 0.6s ease-out forwards;
+            opacity: 0;
+          }
+
+          .animate-shimmer {
+            animation: shimmer 3s infinite;
+            background: linear-gradient(90deg, transparent, rgba(250, 179, 135, 0.3), transparent);
+            background-size: 1000px 100%;
+          }
+
+          .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+          }
+
+          .animate-float {
+            animation: float 3s ease-in-out infinite;
+          }
+
+          .animate-pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
           }
 
           /* Stagger animation helper */

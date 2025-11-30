@@ -5,6 +5,7 @@ export interface ThemeColors {
   text: string;
   subtext: string;
   accent: string;
+  highlight: string;
   border: string;
 }
 

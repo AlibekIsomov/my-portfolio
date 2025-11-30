@@ -15,9 +15,9 @@ export default function Projects() {
     <div className={`min-h-screen transition-colors duration-500 ${t.colors.bg}`}>
       <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} />
       
-      <main className="max-w-5xl mx-auto px-6 md:px-8 py-20">
+      <main className="max-w-5xl mx-auto px-6 md:px-8 py-16 pb-28">
         <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-          <h1 className={`text-5xl md:text-6xl font-extrabold tracking-tight mb-12 ${t.colors.text}`}>All Projects</h1>
+          <h1 className={`text-5xl md:text-6xl font-extrabold tracking-tight mb-12 ${t.colors.highlight}`}>All Projects</h1>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {USER_DATA.projects.map((project, i) => (
@@ -31,9 +31,9 @@ export default function Projects() {
           </div>
 
           <div className={`mt-16 p-8 rounded-2xl text-center ${t.colors.surface} border ${t.colors.border}`}>
-            <h2 className={`text-2xl font-bold mb-4 ${t.colors.text}`}>Want to collaborate?</h2>
+            <h2 className={`text-2xl font-bold mb-4 ${t.colors.highlight}`}>Want to collaborate?</h2>
             <p className={`mb-6 ${t.colors.subtext}`}>
-              I'm always interested in working on exciting projects. Feel free to reach out!
+              I'm always interested in <span className={t.colors.highlight}>working on exciting projects</span>. Feel free to reach out!
             </p>
             <a 
               href="/contact" 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { THEMES } from '@/lib/theme';
 import { USER_DATA } from '@/lib/data';
+import { IntroAnimation } from './components/IntroAnimation';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { FeaturedProjects } from './components/FeaturedProjects';
@@ -12,6 +13,7 @@ import { Footer } from './components/Footer';
 export default function Home() {
   const [currentTheme, setCurrentTheme] = useState<'mocha' | 'latte'>('mocha');
   const [clickCount, setClickCount] = useState(0);
+  const [showIntro, setShowIntro] = useState(true);
   
   const t = THEMES[currentTheme];
 
@@ -20,16 +22,19 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 selection:bg-blue-500 selection:text-white ${t.colors.bg}`}>
-      <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} />
-      
-      <main className="max-w-5xl mx-auto px-6 md:px-8 pb-32">
-        <HeroSection data={USER_DATA} theme={t} />
-        <FeaturedProjects data={USER_DATA} theme={t} />
-        <Dashboard data={USER_DATA} theme={t} clickCount={clickCount} onCounterClick={handleCounterClick} />
-      </main>
+    <>
+      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
+      <div className={`min-h-screen transition-colors duration-500 selection:bg-blue-500 selection:text-white ${t.colors.bg}`}>
+        <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} />
+        
+        <main className="max-w-5xl mx-auto px-6 md:px-8 pb-28">
+          <HeroSection data={USER_DATA} theme={t} />
+          <FeaturedProjects data={USER_DATA} theme={t} />
+          <Dashboard data={USER_DATA} theme={t} clickCount={clickCount} onCounterClick={handleCounterClick} />
+        </main>
 
-      <Footer data={USER_DATA} theme={t} />
-    </div>
+        <Footer data={USER_DATA} theme={t} />
+      </div>
+    </>
   );
 }

@@ -1,12 +1,12 @@
 import { UserData } from './types';
 
 export const USER_DATA: UserData = {
-  name: "Your Name",
-  role: "Senior Developer",
-  company: "Tech Corp",
+  name: "Alibek Isomov",
+  role: "Middle Software Engineer",
+  company: "Gross Insurance",
   bio: "I build software that helps people at scale. Obsessed with clean code, developer experience, and aesthetics.",
-  location: "New York, USA",
-  email: "contact@yourname.com",
+  location: "Tashkent, Uzbekisan",
+  email: "aisomov.dev@gmail.com",
   social: {
     github: "https://github.com",
     linkedin: "https://linkedin.com"
@@ -17,22 +17,22 @@ export const USER_DATA: UserData = {
   },
   projects: [
     {
-      title: "Anubis",
-      description: "Weighs the soul of incoming HTTP requests using proof-of-work to stop AI crawlers.",
-      tags: ["Go", "Security", "AI"],
-      stars: 120
+      title: "dotenv",
+      description: "Just find ur fuckn environment variables",
+      tags: [ "Spring Boot", "Java"],
+      stars: 69
     },
     {
-      title: "Abacus",
+      title: "IDK",
       description: "A scalable, secure, and easy-to-use analytics counter built from the ground up.",
       tags: ["Go", "Redis", "Docker"],
-      stars: 85
+      stars: 69
     },
     {
-      title: "Nyx",
+      title: "IDK",
       description: "The source code for this very website. Built with React and Tailwind.",
       tags: ["React", "Tailwind", "Vite"],
-      stars: 200
+      stars: 69
     }
   ],
   commits: [

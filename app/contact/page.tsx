@@ -29,18 +29,18 @@ export default function Contact() {
     <div className={`min-h-screen transition-colors duration-500 ${t.colors.bg}`}>
       <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} />
       
-      <main className="max-w-5xl mx-auto px-6 md:px-8 py-20">
+      <main className="max-w-5xl mx-auto px-6 md:px-8 py-16 pb-28">
         <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-          <h1 className={`text-5xl md:text-6xl font-extrabold tracking-tight mb-8 ${t.colors.text}`}>Get in Touch</h1>
+          <h1 className={`text-5xl md:text-6xl font-extrabold tracking-tight mb-8 ${t.colors.highlight}`}>Get in Touch</h1>
           
           <p className={`text-xl mb-12 max-w-2xl ${t.colors.subtext}`}>
-            Have a project in mind or want to collaborate? I'd love to hear from you!
+            Have a <span className={t.colors.highlight}>project in mind</span> or want to <span className={t.colors.highlight}>collaborate</span>? I'd love to hear from you!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Contact Form */}
             <form onSubmit={handleSubmit} className={`p-8 rounded-2xl ${t.colors.surface} border ${t.colors.border}`}>
-              <h2 className={`text-2xl font-bold mb-6 ${t.colors.text}`}>Send me a message</h2>
+              <h2 className={`text-2xl font-bold mb-6 ${t.colors.highlight}`}>Send me a message</h2>
               
               <div className="space-y-4">
                 <div>

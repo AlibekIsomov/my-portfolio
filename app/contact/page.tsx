@@ -1,5 +1,6 @@
 'use client';
 
+import type { ChangeEvent, FormEvent } from 'react';
 import { useState } from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import { THEMES } from '@/lib/theme';
@@ -12,12 +13,12 @@ export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const t = THEMES[currentTheme];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // Handle form submission here (integrate with email service)
     console.log('Form submitted:', formData);

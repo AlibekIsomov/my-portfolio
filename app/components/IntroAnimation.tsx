@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { useEffect, useState } from 'react';
 
 interface IntroAnimationProps {
@@ -45,7 +46,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
               className="animate-burst-line"
               style={{
                 animationDelay: `${i * 0.08}s`,
-              } as React.CSSProperties}
+              } as CSSProperties}
             />
           ))}
 
@@ -63,7 +64,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
               className="animate-burst-line"
               style={{
                 animationDelay: `${i * 0.08}s`,
-              } as React.CSSProperties}
+              } as CSSProperties}
             />
           ))}
 
@@ -82,7 +83,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
                 className="animate-burst-line"
                 style={{
                   animationDelay: `${i * 0.1}s`,
-                } as React.CSSProperties}
+                } as CSSProperties}
               />
               <line
                 key={`d2-${i}`}
@@ -96,7 +97,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
                 className="animate-burst-line"
                 style={{
                   animationDelay: `${i * 0.1}s`,
-                } as React.CSSProperties}
+                } as CSSProperties}
               />
             </g>          ))}
         </svg>

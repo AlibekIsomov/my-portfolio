@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -17,7 +18,7 @@ const DockItem = ({
   onClick
 }: { 
   href: string; 
-  icon: React.ReactNode; 
+  icon: ReactNode; 
   label: string; 
   active: boolean; 
   theme: Theme;

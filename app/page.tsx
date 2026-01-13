@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { THEMES } from '@/lib/theme';
 import { USER_DATA } from '@/lib/data';
-import { IntroAnimation } from './components/IntroAnimation';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { FeaturedProjects } from './components/FeaturedProjects';
@@ -13,7 +12,6 @@ import { Footer } from './components/Footer';
 export default function Home() {
   const [currentTheme, setCurrentTheme] = useState<'mocha' | 'latte'>('mocha');
   const [clickCount, setClickCount] = useState(0);
-  const [showIntro, setShowIntro] = useState(true);
   
   const t = THEMES[currentTheme];
 
@@ -23,7 +21,6 @@ export default function Home() {
 
   return (
     <>
-      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
       <div className={`min-h-screen transition-colors duration-500 selection:bg-blue-500 selection:text-white ${t.colors.bg}`}>
         <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} />
         

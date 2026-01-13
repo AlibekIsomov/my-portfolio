@@ -20,6 +20,29 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Backend & Admin Panel
+
+This portfolio now includes a PostgreSQL-backed content API and an admin panel for managing copy. The public pages read text by slug, so you can localize or update messaging without touching the UI code.
+
+### Database setup
+
+1. Create a PostgreSQL database and set `DATABASE_URL` in your environment (see `.env.example`).
+2. Run the schema file:
+
+```bash
+psql "$DATABASE_URL" -f db/schema.sql
+```
+
+### Admin panel
+
+Visit [http://localhost:3000/admin](http://localhost:3000/admin) to add, edit, or delete content items. Changes are saved to Postgres via `/api/content`.
+
+### API endpoints
+
+- `GET /api/content` (optionally `?page=home`) to list content items.
+- `POST /api/content` to create or update a slug.
+- `PUT /api/content/:id` and `DELETE /api/content/:id` for editing or removing entries.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

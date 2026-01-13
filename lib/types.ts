@@ -46,3 +46,12 @@ export interface UserData {
     linkedin?: string;
   };
 }
+
+export interface ContentItem {
+  id: number;
+  pageSlug: string;
+  key: string;
+  value: string;
+}
+
+export type ContentMap = Record<string, Record<string, string>>;

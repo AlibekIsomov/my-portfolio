@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Home, Info, Code, Mail, Moon, Sun, Clock } from 'lucide-react';
-import { Theme } from '@/lib/types';
+import { Home, Info, Code, Mail, Moon, Sun, Clock, Settings } from 'lucide-react';
+import type { ContentMap, Theme } from '@/lib/types';
 import { Clock as ClockComponent } from './Clock';
 
 const DockItem = ({ 
@@ -67,13 +67,16 @@ const DockItem = ({
 export const Navbar = ({ 
   currentTheme, 
   onThemeChange, 
-  theme 
+  theme,
+  content,
 }: { 
   currentTheme: 'mocha' | 'latte'; 
   onThemeChange: (theme: 'mocha' | 'latte') => void; 
   theme: Theme;
+  content: ContentMap;
 }) => {
   const pathname = usePathname();
+  const labels = content.global ?? {};
 
   return (
     <>
@@ -94,7 +97,7 @@ export const Navbar = ({
           <DockItem
             href="/"
             icon={<Home size={24} />}
-            label="Home"
+            label={labels.navHomeLabel ?? 'Home'}
             active={pathname === '/'}
             theme={theme}
           />
@@ -106,7 +109,7 @@ export const Navbar = ({
           <DockItem
             href="/about"
             icon={<Info size={24} />}
-            label="About"
+            label={labels.navAboutLabel ?? 'About'}
             active={pathname === '/about'}
             theme={theme}
           />
@@ -115,7 +118,7 @@ export const Navbar = ({
           <DockItem
             href="/projects"
             icon={<Code size={24} />}
-            label="Projects"
+            label={labels.navProjectsLabel ?? 'Projects'}
             active={pathname === '/projects'}
             theme={theme}
           />
@@ -124,8 +127,16 @@ export const Navbar = ({
           <DockItem
             href="/contact"
             icon={<Mail size={24} />}
-            label="Contact"
+            label={labels.navContactLabel ?? 'Contact'}
             active={pathname === '/contact'}
+            theme={theme}
+          />
+
+          <DockItem
+            href="/admin"
+            icon={<Settings size={24} />}
+            label={labels.navAdminLabel ?? 'Admin'}
+            active={pathname === '/admin'}
             theme={theme}
           />
 

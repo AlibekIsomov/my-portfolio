@@ -50,7 +50,7 @@ export const Dashboard = ({
       {/* Widget 2: Location */}
       <div className={`md:col-span-1 p-8 rounded-3xl flex flex-col items-center justify-center text-center border transition-all hover:-translate-y-1 hover:shadow-lg opacity-0 animate-fade-in-up hover:animate-glow ${theme.colors.surface} ${theme.colors.border}`} style={{ animationDelay: '600ms' }}>
         <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${theme.colors.surfaceHighlight} group-hover:animate-scale-in transition-all`}>
-          <MapPin size={32} className={`${theme.colors.accent} animate-float`} />
+          <MapPin size={32} className={`${theme.colors.accent} `} />
         </div>
         <span className={`text-xs uppercase font-bold tracking-widest opacity-50 mb-2 font-mono ${theme.colors.text}`}>
           {copy.dashboardBasedInLabel ?? 'Based In'}
@@ -65,7 +65,7 @@ export const Dashboard = ({
         style={{ animationDelay: '650ms' }}
       >
         <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 ${theme.colors.surfaceHighlight} group-hover:animate-scale-in transition-all`}>
-          <Cpu size={32} className={`${clickCount > 0 ? 'text-red-400 animate-pulse' : theme.colors.accent} animate-float`} />
+          <Cpu size={32} className={`${clickCount > 0 ? 'text-red-400 animate-pulse' : theme.colors.accent} `} />
         </div>
         <span className={`text-5xl font-mono font-bold mb-1 ${theme.colors.highlight}`}>{clickCount}</span>
         <span className={`text-xs uppercase font-bold tracking-widest opacity-50 font-mono ${theme.colors.text}`}>
@@ -79,7 +79,7 @@ export const Dashboard = ({
       {/* Widget 4: Recent Commits */}
       <div className={`md:col-span-2 p-8 rounded-3xl border transition-all hover:shadow-lg opacity-0 animate-fade-in-up hover:animate-glow ${theme.colors.surface} ${theme.colors.border}`} style={{ animationDelay: '700ms' }}>
         <div className="flex items-center gap-3 mb-6">
-          <GitCommit size={20} className={`${theme.colors.accent} animate-float`} />
+          <GitCommit size={20} className={`${theme.colors.accent}`} />
           <h3 className={`text-lg font-bold font-mono ${theme.colors.highlight}`}>
             {copy.dashboardCommitsTitle ?? 'Recent Commits'}
           </h3>
@@ -97,9 +97,9 @@ export const Dashboard = ({
       {/* Widget 5: Tech Stack / Stats */}
       <div className={`md:col-span-2 p-8 rounded-3xl border transition-all hover:shadow-lg opacity-0 animate-fade-in-up hover:animate-glow ${theme.colors.surface} ${theme.colors.border}`} style={{ animationDelay: '750ms' }}>
         <div className="flex items-center gap-3 mb-8">
-          <Code size={20} className={`${theme.colors.accent} animate-float`} />
+          <Code size={20} className={`${theme.colors.accent}`} />
           <h3 className={`text-lg font-bold font-mono ${theme.colors.highlight}`}>
-            {copy.dashboardLanguageTitle ?? 'Language Stats'}
+            {copy.dashboardLanguageTitle}
           </h3>
         </div>
         

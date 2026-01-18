@@ -40,9 +40,9 @@ export default function About() {
               </div>
               
               <div>
-                <h2 className={`text-2xl font-bold mb-4 ${t.colors.highlight}`}>{copy.interestsTitle ?? 'Interests'}</h2>
+                <h2 className={`text-2xl font-bold mb-4 ${t.colors.highlight}`}>{copy.sTitle ?? 'Interests'}</h2>
                 <ul className={`space-y-2 ${t.colors.subtext}`}>
-                  <li>• <span className={t.colors.highlight}>{copy.interestsItem1 ?? 'Full-stack web development'}</span></li>
+                  <li>• {copy.interestsItem1 ?? 'Full-stack web development'}</li>
                   <li>• {copy.interestsItem2 ?? 'Open source contributions'}</li>
                   <li>• {copy.interestsItem3 ?? 'Developer experience & tooling'}</li>
                   <li>• {copy.interestsItem4 ?? 'Clean code architecture'}</li>

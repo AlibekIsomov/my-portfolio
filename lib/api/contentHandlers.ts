@@ -1,43 +1,31 @@
-type PgPool = {
-  query: (text: string, values?: unknown[]) => Promise<{ rows: any[]; rowCount?: number }>;
-};
+import type { ContentItem } from '@/lib/types';
+import {
+  deleteContentItem,
+  listContentItems,
+  updateContentItem,
+  upsertContentItem,
+} from '@/lib/services/contentService';
 
-const toItem = (row: { id: number; page_slug: string; content_key: string; value: string }) => ({
+const toItem = (row: { id: number; pageSlug: string; contentKey: string; value: string }): ContentItem => ({
   id: row.id,
-  pageSlug: row.page_slug,
-  key: row.content_key,
+  pageSlug: row.pageSlug,
+  key: row.contentKey,
   value: row.value,
 });
 
-export const handleGetContent = async (
-  request: Request,
-  getPgPool: () => Promise<PgPool>,
-) => {
+export const handleGetContent = async (request: Request) => {
   const { searchParams } = new URL(request.url);
-  const page = searchParams.get('page');
-  const query = page
-    ? {
-        text: 'SELECT id, page_slug, content_key, value FROM content_items WHERE page_slug = $1 ORDER BY id ASC',
-        values: [page],
-      }
-    : {
-        text: 'SELECT id, page_slug, content_key, value FROM content_items ORDER BY page_slug ASC, id ASC',
-        values: [],
-      };
+  const page = searchParams.get('page') ?? undefined;
 
   try {
-    const pgPool = await getPgPool();
-    const result = await pgPool.query(query.text, query.values);
-    return { status: 200, body: { items: result.rows.map(toItem) } };
+    const result = await listContentItems(page);
+    return { status: 200, body: { items: result.map(toItem) } };
   } catch (error) {
     return { status: 500, body: { error: 'Database unavailable' } };
   }
 };
 
-export const handlePostContent = async (
-  request: Request,
-  getPgPool: () => Promise<PgPool>,
-) => {
+export const handlePostContent = async (request: Request) => {
   const payload = (await request.json()) as {
     pageSlug?: string;
     key?: string;
@@ -53,27 +41,14 @@ export const handlePostContent = async (
   }
 
   try {
-    const pgPool = await getPgPool();
-    const result = await pgPool.query(
-      `INSERT INTO content_items (page_slug, content_key, value)
-       VALUES ($1, $2, $3)
-       ON CONFLICT (page_slug, content_key)
-       DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
-       RETURNING id, page_slug, content_key, value`,
-      [pageSlug, key, value],
-    );
-
-    return { status: 201, body: { item: toItem(result.rows[0]) } };
+    const item = await upsertContentItem({ pageSlug, key, value });
+    return { status: 201, body: { item: toItem(item) } };
   } catch (error) {
     return { status: 500, body: { error: 'Database unavailable' } };
   }
 };
 
-export const handlePutContent = async (
-  request: Request,
-  params: { id: string },
-  getPgPool: () => Promise<PgPool>,
-) => {
+export const handlePutContent = async (request: Request, params: { id: string }) => {
   const { id } = params;
   const payload = (await request.json()) as { pageSlug?: string; key?: string; value?: string };
   const pageSlug = payload.pageSlug?.trim();
@@ -85,42 +60,19 @@ export const handlePutContent = async (
   }
 
   try {
-    const pgPool = await getPgPool();
-    const result = await pgPool.query(
-      `UPDATE content_items
-       SET page_slug = $1, content_key = $2, value = $3, updated_at = NOW()
-       WHERE id = $4
-       RETURNING id, page_slug, content_key, value`,
-      [pageSlug, key, value, Number(id)],
-    );
-
-    if (result.rowCount === 0) {
-      return { status: 404, body: { error: 'Content item not found' } };
-    }
-
-    return { status: 200, body: { item: toItem(result.rows[0]) } };
+    const item = await updateContentItem(Number(id), { pageSlug, key, value });
+    return { status: 200, body: { item: toItem(item) } };
   } catch (error) {
-    return { status: 500, body: { error: 'Database unavailable' } };
+    return { status: 404, body: { error: 'Content item not found' } };
   }
 };
 
-export const handleDeleteContent = async (
-  params: { id: string },
-  getPgPool: () => Promise<PgPool>,
-) => {
+export const handleDeleteContent = async (params: { id: string }) => {
   const { id } = params;
   try {
-    const pgPool = await getPgPool();
-    const result = await pgPool.query('DELETE FROM content_items WHERE id = $1 RETURNING id, page_slug, content_key, value', [
-      Number(id),
-    ]);
-
-    if (result.rowCount === 0) {
-      return { status: 404, body: { error: 'Content item not found' } };
-    }
-
-    return { status: 200, body: { item: toItem(result.rows[0]) } };
+    const item = await deleteContentItem(Number(id));
+    return { status: 200, body: { item: toItem(item) } };
   } catch (error) {
-    return { status: 500, body: { error: 'Database unavailable' } };
+    return { status: 404, body: { error: 'Content item not found' } };
   }
 };

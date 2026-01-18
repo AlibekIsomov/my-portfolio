@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ContentItem {
+  id        Int      @id @default(autoincrement())
+  pageSlug  String   @map("page_slug")
+  contentKey String  @map("content_key")
+  value     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([pageSlug, contentKey])
+  @@map("content_items")
+}

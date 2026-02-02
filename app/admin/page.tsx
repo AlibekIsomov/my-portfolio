@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { THEMES } from '@/lib/theme';
-import type { ContentItem } from '@/lib/types';
+import { useTheme } from '@/app/components/ThemeProvider';
+import type { ContentItem, Project } from '@/lib/types';
 import { USER_DATA } from '@/lib/data';
 import { applyContentToUserData } from '@/lib/content';
 import { Navbar } from '@/app/components/Navbar';
@@ -12,10 +12,11 @@ import { useContent } from '@/app/hooks/useContent';
 const pageOptions = ['global', 'profile', 'home', 'about', 'projects', 'contact'];
 
 export default function AdminPage() {
-  const [currentTheme, setCurrentTheme] = useState<'mocha' | 'latte'>('mocha');
-  const t = THEMES[currentTheme];
+  const { theme: t } = useTheme();
   const { content } = useContent();
   const userData = applyContentToUserData(USER_DATA, content);
+
+  // Content State
   const [items, setItems] = useState<ContentItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +26,19 @@ export default function AdminPage() {
   const [form, setForm] = useState({ pageSlug: 'home', key: '', value: '' });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ pageSlug: '', key: '', value: '' });
+
+  // Project State
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [projectForm, setProjectForm] = useState({
+    title: '',
+    description: '',
+    imageUrl: '',
+    demoUrl: '',
+    repoUrl: '',
+    techStack: '',
+    featured: false,
+  });
+  const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
 
   const filteredItems = useMemo(() => {
     if (filter === 'all') {
@@ -50,6 +64,18 @@ export default function AdminPage() {
     }
   };
 
+  const loadProjects = async () => {
+    try {
+      const response = await fetch('/api/projects', { cache: 'no-store' });
+      if (response.ok) {
+        const data = await response.json();
+        setProjects(data.projects ?? []);
+      }
+    } catch (error) {
+      console.error('Failed to load projects', error);
+    }
+  };
+
   const loadSession = async () => {
     try {
       const response = await fetch('/api/admin/session', { cache: 'no-store' });
@@ -67,6 +93,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (isAuthenticated) {
       loadItems();
+      loadProjects();
     }
   }, [isAuthenticated]);
 
@@ -91,8 +118,10 @@ export default function AdminPage() {
     await fetch('/api/admin/logout', { method: 'POST' });
     setIsAuthenticated(false);
     setItems([]);
+    setProjects([]);
   };
 
+  // Content Handlers
   const handleCreate = async () => {
     if (!form.pageSlug.trim() || !form.key.trim() || !form.value.trim()) {
       setError('All fields are required to create content.');
@@ -140,10 +169,75 @@ export default function AdminPage() {
     await loadItems();
   };
 
+  // Project Handlers
+  const handleCreateProject = async () => {
+    const techStackArray = projectForm.techStack.split(',').map(s => s.trim()).filter(Boolean);
+    const response = await fetch('/api/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...projectForm, techStack: techStackArray }),
+    });
+
+    if (response.ok) {
+      setProjectForm({ title: '', description: '', imageUrl: '', demoUrl: '', repoUrl: '', techStack: '', featured: false });
+      loadProjects();
+    } else {
+      setError('Failed to create project');
+    }
+  };
+
+  const handleUpdateProject = async () => {
+    if (!editingProjectId) return;
+    const techStackArray = projectForm.techStack.split(',').map(s => s.trim()).filter(Boolean);
+    const response = await fetch(`/api/projects/${editingProjectId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...projectForm, techStack: techStackArray }),
+    });
+
+    if (response.ok) {
+      setEditingProjectId(null);
+      setProjectForm({ title: '', description: '', imageUrl: '', demoUrl: '', repoUrl: '', techStack: '', featured: false });
+      loadProjects();
+    } else {
+      setError('Failed to update project');
+    }
+  };
+
+  const handleDeleteProject = async (id: number) => {
+    if (confirm('Are you sure you want to delete this project?')) {
+      const response = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        loadProjects();
+      } else {
+        setError('Failed to delete project');
+      }
+    }
+  };
+
+  const startEditProject = (project: Project) => {
+    setEditingProjectId(project.id!);
+    setProjectForm({
+      title: project.title,
+      description: project.description,
+      imageUrl: project.imageUrl || '',
+      demoUrl: project.demoUrl || '',
+      repoUrl: project.repoUrl || '',
+      techStack: project.techStack.join(', '),
+      featured: false, // Type definition for Project might miss this if not updated, but API sends it
+    });
+  };
+
+  const cancelEditProject = () => {
+    setEditingProjectId(null);
+    setProjectForm({ title: '', description: '', imageUrl: '', demoUrl: '', repoUrl: '', techStack: '', featured: false });
+  };
+
+
   if (isAuthenticated === null) {
     return (
       <div className={`min-h-screen transition-colors duration-500 ${t.colors.bg}`}>
-        <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} content={content} />
+        <Navbar content={content} />
 
         <main className="max-w-2xl mx-auto px-6 md:px-8 py-16 pb-28">
           <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
@@ -160,7 +254,7 @@ export default function AdminPage() {
   if (isAuthenticated === false) {
     return (
       <div className={`min-h-screen transition-colors duration-500 ${t.colors.bg}`}>
-        <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} content={content} />
+        <Navbar content={content} />
 
         <main className="max-w-2xl mx-auto px-6 md:px-8 py-16 pb-28">
           <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
@@ -211,7 +305,7 @@ export default function AdminPage() {
 
   return (
     <div className={`min-h-screen transition-colors duration-500 ${t.colors.bg}`}>
-      <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} content={content} />
+      <Navbar content={content} />
 
       <main className="max-w-6xl mx-auto px-6 md:px-8 py-16 pb-28">
         <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
@@ -223,6 +317,111 @@ export default function AdminPage() {
               <p className={`text-sm ${t.colors.highlight}`}>{error}</p>
             </div>
           )}
+
+          <section className={`p-6 rounded-2xl border ${t.colors.border} ${t.colors.surface} mb-12`}>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div>
+                <h2 className={`text-2xl font-bold ${t.colors.highlight}`}>Manage Projects</h2>
+                <p className={t.colors.subtext}>Add or update your portfolio projects.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <input
+                value={projectForm.title}
+                onChange={e => setProjectForm(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Project Title"
+                className={`px-3 py-2 rounded-lg ${t.colors.surfaceHighlight} ${t.colors.text} border ${t.colors.border}`}
+              />
+              <input
+                value={projectForm.description}
+                onChange={e => setProjectForm(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Description"
+                className={`px-3 py-2 rounded-lg ${t.colors.surfaceHighlight} ${t.colors.text} border ${t.colors.border}`}
+              />
+              <input
+                value={projectForm.imageUrl}
+                onChange={e => setProjectForm(prev => ({ ...prev, imageUrl: e.target.value }))}
+                placeholder="Image URL"
+                className={`px-3 py-2 rounded-lg ${t.colors.surfaceHighlight} ${t.colors.text} border ${t.colors.border}`}
+              />
+              <input
+                value={projectForm.demoUrl}
+                onChange={e => setProjectForm(prev => ({ ...prev, demoUrl: e.target.value }))}
+                placeholder="Demo URL"
+                className={`px-3 py-2 rounded-lg ${t.colors.surfaceHighlight} ${t.colors.text} border ${t.colors.border}`}
+              />
+              <input
+                value={projectForm.repoUrl}
+                onChange={e => setProjectForm(prev => ({ ...prev, repoUrl: e.target.value }))}
+                placeholder="Repo URL"
+                className={`px-3 py-2 rounded-lg ${t.colors.surfaceHighlight} ${t.colors.text} border ${t.colors.border}`}
+              />
+              <input
+                value={projectForm.techStack}
+                onChange={e => setProjectForm(prev => ({ ...prev, techStack: e.target.value }))}
+                placeholder="Tech Stack (comma separated)"
+                className={`px-3 py-2 rounded-lg ${t.colors.surfaceHighlight} ${t.colors.text} border ${t.colors.border}`}
+              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="featured-checkbox"
+                  checked={projectForm.featured}
+                  onChange={e => setProjectForm(prev => ({ ...prev, featured: e.target.checked }))}
+                  className="w-5 h-5"
+                />
+                <label htmlFor="featured-checkbox" className={`${t.colors.text}`}>Featured Project</label>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              {editingProjectId && (
+                <button
+                  type="button"
+                  onClick={cancelEditProject}
+                  className={`px-4 py-2 rounded-lg border ${t.colors.border} ${t.colors.text}`}
+                >
+                  Cancel
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={editingProjectId ? handleUpdateProject : handleCreateProject}
+                className={`px-4 py-2 rounded-lg font-bold ${t.colors.accent === 'text-[#89b4fa]' ? 'bg-[#89b4fa] text-[#1e1e2e]' : 'bg-[#1e66f5] text-white'}`}
+              >
+                {editingProjectId ? 'Update Project' : 'Add Project'}
+              </button>
+            </div>
+
+            <div className="mt-8 space-y-4">
+              {projects.map(project => (
+                <div key={project.id} className={`p-4 rounded-xl border ${t.colors.border} ${t.colors.surfaceHighlight} flex justify-between items-center`}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className={`font-bold ${t.colors.text}`}>{project.title}</h3>
+                      {/* {project.featured && <span className="text-yellow-500 text-xs font-bold border border-yellow-500 px-1 rounded">FEATURED</span>} */}
+                    </div>
+                    <p className={`text-sm ${t.colors.subtext}`}>{project.description}</p>
+                    <p className={`text-xs ${t.colors.subtext} mt-1`}>{project.techStack.join(', ')}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => startEditProject(project)}
+                      className={`px-3 py-1 rounded-lg border ${t.colors.border} ${t.colors.text} text-sm`}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProject(project.id!)}
+                      className="px-3 py-1 rounded-lg border border-red-400 text-red-300 text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
           <section className={`p-6 rounded-2xl border ${t.colors.border} ${t.colors.surface} mb-12`}>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">

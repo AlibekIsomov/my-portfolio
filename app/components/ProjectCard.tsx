@@ -3,7 +3,7 @@ import { Theme, Project } from '@/lib/types';
 import { Tag } from './Tag';
 
 export const ProjectCard = ({ project, theme, delay }: { project: Project; theme: Theme; delay: number }) => (
-  <div 
+  <div
     className={`p-6 rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:animate-glow group opacity-0 animate-fade-in-up ${theme.colors.surface} border ${theme.colors.border}`}
     style={{ animationDelay: `${delay}ms` }}
   >
@@ -21,7 +21,7 @@ export const ProjectCard = ({ project, theme, delay }: { project: Project; theme
       {project.description}
     </p>
     <div className="flex flex-wrap gap-2">
-      {project.tags.map(tag => <Tag key={tag} text={tag} theme={theme} />)}
+      {(project.tags || project.techStack || []).map(tag => <Tag key={tag} text={tag} theme={theme} />)}
     </div>
   </div>
 );

@@ -19,14 +19,14 @@ export const THEMES: Record<'mocha' | 'latte', Theme> = {
     name: 'Latte',
     type: 'light',
     colors: {
-      bg: 'bg-[#eff1f5]',
-      surface: 'bg-[#e6e9ef]',
-      surfaceHighlight: 'bg-[#bcc0cc]',
-      text: 'text-[#4c4f69]',
-      subtext: 'text-[#6c6f85]',
-      accent: 'text-[#1e66f5]',
-      highlight: 'text-[#d08552]',
-      border: 'border-[#bcc0cc]'
+      bg: 'bg-[#f0f2f5]', // Slightly cleaner gray-blue
+      surface: 'bg-[#ffffff]', // White cards for pop
+      surfaceHighlight: 'bg-[#e6e9ef]', // Subtle highlight
+      text: 'text-[#4c4f69]', // Keep readable dark text
+      subtext: 'text-[#8c8fa1]', // Lighter subtext
+      accent: 'text-[#1e66f5]', // Keep energetic blue
+      highlight: 'text-[#df8e1d]', // Warmer orange
+      border: 'border-[#dce0e8]' // Lighter border
     }
   }
 };

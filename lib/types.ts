@@ -16,10 +16,15 @@ export interface Theme {
 }
 
 export interface Project {
+  id?: number;
   title: string;
   description: string;
-  tags: string[];
-  stars: number;
+  imageUrl?: string;
+  demoUrl?: string;
+  repoUrl?: string;
+  techStack: string[];
+  tags?: string[]; // Backwards compatibility or mapped from techStack
+  stars?: number;
 }
 
 export interface Commit {

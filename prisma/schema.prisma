@@ -18,3 +18,36 @@ model ContentItem {
   @@unique([pageSlug, contentKey])
   @@map("content_items")
 }
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  imageUrl    String?  @map("image_url")
+  demoUrl     String?  @map("demo_url")
+  repoUrl     String?  @map("repo_url")
+  techStack   String[] @map("tech_stack")
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model GlobalStats {
+  id        Int      @id @default(autoincrement())
+  clicks    Int      @default(0)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("global_stats")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("messages")
+}

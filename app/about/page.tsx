@@ -1,73 +1,72 @@
 'use client';
 
-import { useState } from 'react';
-import { THEMES } from '@/lib/theme';
+import { useTheme } from '@/app/components/ThemeProvider';
 import { USER_DATA } from '@/lib/data';
 import { applyContentToUserData } from '@/lib/content';
 import { useContent } from '@/app/hooks/useContent';
 import { Navbar } from '@/app/components/Navbar';
 import { Footer } from '@/app/components/Footer';
+import { SpotlightCard } from '@/app/components/ui/SpotlightCard';
 
 export default function About() {
-  const [currentTheme, setCurrentTheme] = useState<'mocha' | 'latte'>('mocha');
+  const { theme: t } = useTheme();
   const { content } = useContent();
-  const t = THEMES[currentTheme];
   const copy = content.about ?? {};
   const userData = applyContentToUserData(USER_DATA, content);
 
   return (
     <div className={`min-h-screen transition-colors duration-500 ${t.colors.bg}`}>
-      <Navbar currentTheme={currentTheme} onThemeChange={setCurrentTheme} theme={t} content={content} />
-      
-      <main className="max-w-5xl mx-auto px-6 md:px-8 py-16 pb-28">
+      <Navbar content={content} />
+
+      <main className="max-w-5xl mx-auto px-4 md:px-8 py-10 md:py-16 pb-24 md:pb-28">
         <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-          <h1 className={`text-5xl md:text-6xl font-extrabold tracking-tight mb-8 ${t.colors.text}`}>
+          <h1 className={`text-4xl md:text-6xl font-extrabold tracking-tight mb-6 md:mb-8 ${t.colors.highlight}`}>
             {copy.pageTitle ?? 'About Me'}
           </h1>
-          
+
           <div className="space-y-8">
-            <p className={`text-lg leading-relaxed ${t.colors.subtext}`}>
+            <p className={`text-lg md:text-xl leading-relaxed ${t.colors.subtext}`}>
               {userData.bio}
             </p>
-            
-            <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 p-8 rounded-2xl ${t.colors.surface} border ${t.colors.border}`}>
-              <div>
+
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 mt-12`}>
+              <SpotlightCard theme={t} contentClassName="p-8">
                 <h2 className={`text-2xl font-bold mb-4 ${t.colors.highlight}`}>{copy.backgroundTitle ?? 'Background'}</h2>
                 <p className={`${t.colors.subtext}`}>
                   {copy.backgroundBody ??
-                    "I'm a passionate developer with a focus on building scalable, performant web applications. My journey in tech started with a curiosity about how things work, which led me to dive deep into software engineering."}
+                    "A passionate developer who loves exploring new technologies. I started coding when I realized I could build things that live on the internet."}
                 </p>
-              </div>
-              
-              <div>
+              </SpotlightCard>
+
+              <SpotlightCard theme={t} contentClassName="p-8">
                 <h2 className={`text-2xl font-bold mb-4 ${t.colors.highlight}`}>{copy.sTitle ?? 'Interests'}</h2>
                 <ul className={`space-y-2 ${t.colors.subtext}`}>
                   <li>• {copy.interestsItem1 ?? 'Full-stack web development'}</li>
-                  <li>• {copy.interestsItem2 ?? 'Open source contributions'}</li>
-                  <li>• {copy.interestsItem3 ?? 'Developer experience & tooling'}</li>
+                  <li>• {copy.interestsItem2 ?? 'System design & architecture'}</li>
+                  <li>• {copy.interestsItem3 ?? 'Cloud infrastructure'}</li>
                   <li>• {copy.interestsItem4 ?? 'Clean code architecture'}</li>
                   <li>• {copy.interestsItem5 ?? 'Performance optimization'}</li>
                 </ul>
-              </div>
+              </SpotlightCard>
             </div>
 
-            <div className={`p-8 rounded-2xl ${t.colors.surface} border ${t.colors.border}`}>
+            <SpotlightCard theme={t} contentClassName="p-8">
               <h2 className={`text-2xl font-bold mb-6 ${t.colors.highlight}`}>{copy.skillsTitle ?? 'Skills'}</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <h3 className={`font-bold mb-3 ${t.colors.highlight}`}>{copy.skillsLanguagesTitle ?? 'Languages'}</h3>
-                  <p className={t.colors.subtext}>{copy.skillsLanguagesBody ?? 'Go, JavaScript, TypeScript, Python'}</p>
+                  <h3 className={`font-bold mb-2 ${t.colors.text}`}>{copy.skillsFrontendLabel ?? 'Frontend'}</h3>
+                  <p className={t.colors.subtext}>{copy.skillsFrontendBody ?? 'React, Next.js, Tailwind, TypeScript'}</p>
                 </div>
                 <div>
-                  <h3 className={`font-bold mb-3 ${t.colors.highlight}`}>{copy.skillsFrontendTitle ?? 'Frontend'}</h3>
-                  <p className={t.colors.subtext}>{copy.skillsFrontendBody ?? 'React, Next.js, Tailwind CSS, Vite'}</p>
+                  <h3 className={`font-bold mb-2 ${t.colors.text}`}>{copy.skillsBackendLabel ?? 'Backend'}</h3>
+                  <p className={t.colors.subtext}>{copy.skillsBackendBody ?? 'Node.js, Go, Python, PostgreSQL'}</p>
                 </div>
                 <div>
-                  <h3 className={`font-bold mb-3 ${t.colors.highlight}`}>{copy.skillsBackendTitle ?? 'Backend & DevOps'}</h3>
-                  <p className={t.colors.subtext}>{copy.skillsBackendBody ?? 'Node.js, Docker, Redis, PostgreSQL'}</p>
+                  <h3 className={`font-bold mb-2 ${t.colors.text}`}>{copy.skillsToolsLabel ?? 'Tools'}</h3>
+                  <p className={t.colors.subtext}>{copy.skillsToolsBody ?? 'Git, Docker, VS Code, Linux'}</p>
                 </div>
               </div>
-            </div>
+            </SpotlightCard>
           </div>
         </div>
       </main>

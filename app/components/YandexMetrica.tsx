@@ -2,9 +2,9 @@
 
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
-export default function YandexMetrica() {
+function MetricaContent() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const YANDEX_ID = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID;
@@ -49,5 +49,13 @@ export default function YandexMetrica() {
                 </div>
             </noscript>
         </>
+    );
+}
+
+export default function YandexMetrica() {
+    return (
+        <Suspense fallback={null}>
+            <MetricaContent />
+        </Suspense>
     );
 }

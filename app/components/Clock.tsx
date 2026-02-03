@@ -16,7 +16,9 @@ export function Clock({ theme, compact = false }: ClockProps) {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
 
+  useEffect(() => {
     // Detect user's timezone
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setTimezone(userTimezone);
@@ -30,7 +32,7 @@ export function Clock({ theme, compact = false }: ClockProps) {
       const hours = String(userTime.getHours()).padStart(2, '0');
       const minutes = String(userTime.getMinutes()).padStart(2, '0');
       const seconds = String(userTime.getSeconds()).padStart(2, '0');
-      
+
       const day = String(userTime.getDate()).padStart(2, '0');
       const month = String(userTime.getMonth() + 1).padStart(2, '0');
       const year = userTime.getFullYear();
@@ -47,7 +49,7 @@ export function Clock({ theme, compact = false }: ClockProps) {
     const interval = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval);
-  }, [compact, timezone]);
+  }, [compact]);
 
   if (!mounted) return null;
 

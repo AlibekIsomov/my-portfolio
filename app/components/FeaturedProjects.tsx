@@ -1,39 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import type { ContentMap, Project, Theme, UserData } from '@/lib/types';
 import { ProjectCard } from './ProjectCard';
 
-export const FeaturedProjects = ({ data, theme, content }: { data: UserData; theme: Theme; content: ContentMap }) => {
-  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchFeatured = async () => {
-      try {
-        const res = await fetch('/api/projects?featured=true');
-        if (res.ok) {
-          const json = await res.json();
-          // If we have featured projects in DB, use them
-          if (json.projects && json.projects.length > 0) {
-            setFeaturedProjects(json.projects);
-          } else {
-            // Fallback to static data filtered for optimization (assumption: first 3 are featured if no flag)
-            // Or if static data had a 'featured' flag, we'd use that. 
-            // For now, let's just use the first 3 static projects as fallback.
-            setFeaturedProjects(data.projects.slice(0, 3));
-          }
-        }
-      } catch (e) {
-        setFeaturedProjects(data.projects.slice(0, 3));
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFeatured();
-  }, [data.projects]);
-
-  const displayProjects = featuredProjects.length > 0 ? featuredProjects : data.projects.slice(0, 3);
+export const FeaturedProjects = ({
+  data,
+  theme,
+  content,
+  projects
+}: {
+  data: UserData;
+  theme: Theme;
+  content: ContentMap;
+  projects: Project[];
+}) => {
+  // Use passed projects or fallback to static data
+  const displayProjects = projects.length > 0 ? projects : data.projects.slice(0, 3);
 
   return (
     <section className="mb-32">

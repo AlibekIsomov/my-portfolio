@@ -33,7 +33,7 @@ export const GET = async () => {
         const events = await response.json();
 
         const commits = events
-            .map((event: any) => {
+            .map((event: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                 const repoName = event.repo?.name || 'unknown';
                 const repoShort = repoName.split('/')[1] || repoName;
                 const date = event.created_at;
@@ -76,7 +76,7 @@ export const GET = async () => {
 
                 return null;
             })
-            .filter((item: any) => item !== null)
+            .filter((item: any) => item !== null) // eslint-disable-line @typescript-eslint/no-explicit-any
             .slice(0, 5);
 
         return NextResponse.json({ commits });

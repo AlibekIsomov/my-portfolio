@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             setThemeName(saved);
         }
         setMounted(true);
-    }, []);
+    }, [setThemeName]);
 
     const setTheme = (name: ThemeName) => {
         setThemeName(name);

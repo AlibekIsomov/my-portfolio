@@ -5,13 +5,14 @@ import { getAdminSession } from '@/lib/auth';
 export const runtime = 'nodejs';
 
 // PUT update project (Admin only)
-export const PUT = async (request: Request, { params }: { params: { id: string } }) => {
+export const PUT = async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     if (!(await getAdminSession())) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
-        const id = parseInt(params.id);
+        const resolvedParams = await params;
+        const id = parseInt(resolvedParams.id);
         const body = await request.json();
         const { title, description, imageUrl, demoUrl, repoUrl, techStack, featured } = body;
 
@@ -36,13 +37,14 @@ export const PUT = async (request: Request, { params }: { params: { id: string }
 };
 
 // DELETE project (Admin only)
-export const DELETE = async (request: Request, { params }: { params: { id: string } }) => {
+export const DELETE = async (_request: Request, { params }: { params: Promise<{ id: string }> }) => {
     if (!(await getAdminSession())) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
-        const id = parseInt(params.id);
+        const resolvedParams = await params;
+        const id = parseInt(resolvedParams.id);
         await prisma.project.delete({
             where: { id },
         });

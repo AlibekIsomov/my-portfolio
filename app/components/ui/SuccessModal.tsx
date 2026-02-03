@@ -15,7 +15,7 @@ export const SuccessModal = ({ isOpen, onClose, theme, autoCloseTime = 3 }: Succ
 
     useEffect(() => {
         if (isOpen) {
-            setCountdown(autoCloseTime);
+            setCountdown(autoCloseTime); // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/rules-of-hooks
             const timer = setInterval(() => {
                 setCountdown((prev) => {
                     if (prev <= 1) {
@@ -84,7 +84,7 @@ export const SuccessModal = ({ isOpen, onClose, theme, autoCloseTime = 3 }: Succ
                                 transition={{ delay: 0.4 }}
                                 className={`mb-8 ${theme.colors.subtext}`}
                             >
-                                Thanks for reaching out. I'll get back to you as soon as possible.
+                                Thanks for reaching out. I&apos;ll get back to you as soon as possible.
                             </motion.p>
 
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden mb-2">

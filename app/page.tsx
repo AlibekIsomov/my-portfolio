@@ -1,39 +1,28 @@
-'use client';
-
-import { useState } from 'react';
-import { useTheme } from './components/ThemeProvider';
-import { USER_DATA } from '@/lib/data';
-import { Navbar } from './components/Navbar';
-import { HeroSection } from './components/HeroSection';
-import { FeaturedProjects } from './components/FeaturedProjects';
-import { Dashboard } from './components/Dashboard';
-import { Footer } from './components/Footer';
-import { useContent } from './hooks/useContent';
 import { applyContentToUserData } from '@/lib/content';
+import { USER_DATA } from '@/lib/data';
+import { getCachedContent, getCachedProjects, getCachedStats, getGithubCommits } from '@/lib/data-fetchers';
+import { HomeClient } from '@/app/components/HomeClient';
 
-export default function Home() {
-  const { theme: t } = useTheme();
-  const [clickCount, setClickCount] = useState(0);
-  const { content } = useContent();
+export default async function Home() {
+  const content = await getCachedContent();
+  const featuredProjects = await getCachedProjects(true);
+  const statsData = await getCachedStats();
+  const commits = await getGithubCommits();
+
   const userData = applyContentToUserData(USER_DATA, content);
 
-  const handleCounterClick = () => {
-    setClickCount(prev => prev + 1);
+  const stats = {
+    views: statsData.views,
+    clicks: statsData.clicks,
+    commits: typeof commits === 'number' ? commits : 1240
   };
 
   return (
-    <>
-      <div className={`min-h-screen transition-colors duration-500 selection:bg-blue-500 selection:text-white ${t.colors.bg}`}>
-        <Navbar content={content} />
-
-        <main className="max-w-5xl mx-auto px-4 md:px-8 pb-20 md:pb-28">
-          <HeroSection data={userData} theme={t} content={content} />
-          <FeaturedProjects data={userData} theme={t} content={content} />
-          <Dashboard data={userData} theme={t} clickCount={clickCount} onCounterClick={handleCounterClick} content={content} />
-        </main>
-
-        <Footer data={userData} theme={t} content={content} />
-      </div>
-    </>
+    <HomeClient
+      content={content}
+      userData={userData}
+      featuredProjects={featuredProjects}
+      stats={stats}
+    />
   );
 }

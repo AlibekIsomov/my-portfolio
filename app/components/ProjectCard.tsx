@@ -1,11 +1,14 @@
 import { Box, ArrowUpRight } from 'lucide-react';
 import { Theme, Project } from '@/lib/types';
 import { Tag } from './Tag';
+import { SpotlightCard } from './ui/SpotlightCard';
 
 export const ProjectCard = ({ project, theme, delay }: { project: Project; theme: Theme; delay: number }) => (
-  <div
-    className={`p-6 rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:animate-glow group opacity-0 animate-fade-in-up ${theme.colors.surface} border ${theme.colors.border}`}
+  <SpotlightCard
+    theme={theme}
+    className={`opacity-0 animate-fade-in-up hover:-translate-y-2 hover:shadow-xl transition-all duration-300`}
     style={{ animationDelay: `${delay}ms` }}
+    contentClassName="p-6"
   >
     <div className="flex justify-between items-start mb-6">
       <div className={`p-3 rounded-xl ${theme.colors.surfaceHighlight} text-opacity-90 group-hover:animate-scale-in transition-all`}>
@@ -23,5 +26,5 @@ export const ProjectCard = ({ project, theme, delay }: { project: Project; theme
     <div className="flex flex-wrap gap-2">
       {(project.tags || project.techStack || []).map(tag => <Tag key={tag} text={tag} theme={theme} />)}
     </div>
-  </div>
+  </SpotlightCard>
 );

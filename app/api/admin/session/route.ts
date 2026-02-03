@@ -4,7 +4,7 @@ import { getAdminSession } from '@/lib/auth';
 export const runtime = 'nodejs';
 
 export const GET = async () => {
-  const session = getAdminSession();
+  const session = await getAdminSession();
   if (!session) {
     return NextResponse.json({ authenticated: false }, { status: 200 });
   }

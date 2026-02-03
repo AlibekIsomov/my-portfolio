@@ -65,16 +65,17 @@ export const verifySessionToken = (token: string) => {
   }
 };
 
-export const getAdminSession = () => {
-  const token = cookies().get(COOKIE_NAME)?.value;
+export const getAdminSession = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
   if (!token) {
     return null;
   }
   return verifySessionToken(token);
 };
 
-export const setAdminSessionCookie = (token: string) => {
-  const cookieStore = cookies();
+export const setAdminSessionCookie = async (token: string) => {
+  const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'lax',
@@ -84,8 +85,8 @@ export const setAdminSessionCookie = (token: string) => {
   });
 };
 
-export const clearAdminSessionCookie = () => {
-  const cookieStore = cookies();
+export const clearAdminSessionCookie = async () => {
+  const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, '', {
     httpOnly: true,
     sameSite: 'lax',

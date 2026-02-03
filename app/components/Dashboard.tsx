@@ -68,7 +68,7 @@ export const Dashboard = ({
     };
   }, [pendingClicks]);
 
-  const [recentCommits, setRecentCommits] = useState<any[]>([]);
+  const [recentCommits, setRecentCommits] = useState<any[]>([]); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   useEffect(() => {
     const fetchCommits = async () => {
@@ -119,10 +119,10 @@ export const Dashboard = ({
             </p>
           </div>
           <a
-            href={`mailto:${data.email || 'contact@example.com'}`}
+            href="/contact"
             className={`w-fit mt-6 px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl font-bold font-mono text-sm md:text-base transition-all hover:scale-105 active:scale-95 shadow-lg hover:animate-glow ${theme.colors.accent === 'text-[#89b4fa]' ? 'bg-[#89b4fa] text-[#1e1e2e]' : 'bg-[#1e66f5] text-white'}`}
           >
-            {copy.dashboardConnectButton ?? 'Book a Chat'}
+            {copy.dashboardConnectButton ?? 'Get in Touch'}
           </a>
         </SpotlightCard>
 

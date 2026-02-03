@@ -4,28 +4,30 @@ import { getAdminSession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 
-const requireSession = () => {
-  const session = getAdminSession();
+const requireSession = async () => {
+  const session = await getAdminSession();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   return null;
 };
 
-export const PUT = async (request: Request, context: { params: { id: string } }) => {
-  const authResponse = requireSession();
+export const PUT = async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
+  const authResponse = await requireSession();
   if (authResponse) {
     return authResponse;
   }
-  const result = await handlePutContent(request, context.params);
+  const resolvedParams = await params;
+  const result = await handlePutContent(request, resolvedParams);
   return NextResponse.json(result.body, { status: result.status });
 };
 
-export const DELETE = async (_request: Request, context: { params: { id: string } }) => {
-  const authResponse = requireSession();
+export const DELETE = async (_request: Request, { params }: { params: Promise<{ id: string }> }) => {
+  const authResponse = await requireSession();
   if (authResponse) {
     return authResponse;
   }
-  const result = await handleDeleteContent(context.params);
+  const resolvedParams = await params;
+  const result = await handleDeleteContent(resolvedParams);
   return NextResponse.json(result.body, { status: result.status });
 };

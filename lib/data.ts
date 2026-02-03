@@ -19,19 +19,19 @@ export const USER_DATA: UserData = {
     {
       title: "dotenv",
       description: "Just find ur fuckn environment variables",
-      tags: [ "Spring Boot", "Java"],
+      techStack: ["Spring Boot", "Java"],
       stars: 69
     },
     {
       title: "IDK",
       description: "A scalable, secure, and easy-to-use analytics counter built from the ground up.",
-      tags: ["Go", "Redis", "Docker"],
+      techStack: ["Go", "Redis", "Docker"],
       stars: 69
     },
     {
       title: "IDK",
       description: "The source code for this very website. Built with React and Tailwind.",
-      tags: ["React", "Tailwind", "Vite"],
+      techStack: ["React", "Tailwind", "Vite"],
       stars: 69
     }
   ],

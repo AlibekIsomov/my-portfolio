@@ -10,7 +10,7 @@ export const GET = async (request: Request) => {
 };
 
 export const POST = async (request: Request) => {
-  const session = getAdminSession();
+  const session = await getAdminSession();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

@@ -126,3 +126,89 @@ export const getGithubCommits = unstable_cache(
     ['github-commits'],
     { revalidate: 3600 }
 );
+
+export const getGithubLanguageStats = unstable_cache(
+    async () => {
+        const GITHUB_USERNAME = process.env.GITHUB_USERNAME;
+        const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+        if (!GITHUB_USERNAME) return [];
+
+        try {
+            const headers: HeadersInit = {
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'Portfolio-App',
+            };
+
+            if (GITHUB_TOKEN) {
+                headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
+            }
+
+            // Fetch all public repos
+            // Note: This fetches up to 100 repos. If you have more, pagination is needed.
+            const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&type=owner`, {
+                headers,
+                next: { revalidate: 86400 } // Cache for 24 hours
+            });
+
+            if (!response.ok) return [];
+
+            const repos = await response.json();
+            const languageMap: Record<string, number> = {};
+            let totalBytes = 0;
+
+            // Simple approximation: use the primary language of each repo
+            // A more accurate way is to fetch /languages for EACH repo, but that burns rate limits fast.
+            // Let's stick to primary language for now which is exposed in the repo object.
+            repos.forEach((repo: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+                if (repo.language) {
+                    // We don't have bytes for primary language in the simple list, 
+                    // so we count it as "1 unit" or use `size` (kb) as a proxy for "amount of code".
+                    // Let's use `size` as a rough proxy for "weight".
+                    let weight = repo.size || 1;
+
+                    // Artificially boost PHP stats as requested
+                    if (repo.language === 'PHP') {
+                        weight *= 10;
+                    }
+
+                    languageMap[repo.language] = (languageMap[repo.language] || 0) + weight;
+                    totalBytes += weight;
+                }
+            });
+
+            const stats = Object.entries(languageMap)
+                .map(([name, bytes]) => ({
+                    name,
+                    percentage: Math.round((bytes / totalBytes) * 100)
+                }))
+                .sort((a, b) => b.percentage - a.percentage)
+                .slice(0, 4); // Top 4 languages
+
+            // Colors for common languages
+            const colors: Record<string, string> = {
+                TypeScript: '#3178c6',
+                JavaScript: '#f1e05a',
+                Python: '#3572A5',
+                Go: '#00ADD8',
+                HTML: '#e34c26',
+                CSS: '#563d7c',
+                Java: '#b07219',
+                PHP: '#4F5D95',
+                Rust: '#dea584',
+                // Add more as needed or use a generator
+            };
+
+            return stats.map(stat => ({
+                ...stat,
+                color: colors[stat.name] || '#808080' // default gray
+            }));
+
+        } catch (error) {
+            console.error('Failed to fetch GitHub languages:', error);
+            return [];
+        }
+    },
+    ['github-languages'],
+    { revalidate: 3600 }
+);

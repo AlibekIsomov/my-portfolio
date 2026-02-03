@@ -92,6 +92,23 @@ export const Dashboard = ({
     onCounterClick();
   };
 
+  const [languages, setLanguages] = useState<any[]>([]); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const res = await fetch('/api/stats/languages');
+        if (res.ok) {
+          const data = await res.json();
+          setLanguages(data.languages);
+        }
+      } catch (e) {
+        console.error('Failed to fetch languages:', e);
+      }
+    };
+    fetchLanguages();
+  }, []);
+
   return (
     <section className="opacity-0 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
       <div className="flex items-center gap-3 mb-6 md:mb-10">
@@ -183,15 +200,15 @@ export const Dashboard = ({
                   href={commit.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex justify-between items-start text-sm font-mono group cursor-pointer hover:opacity-80 transition-all"
+                  className="flex justify-between items-start text-sm font-mono group cursor-pointer hover:opacity-80 transition-all gap-4"
                 >
-                  <div className="flex flex-col overflow-hidden mr-4">
+                  <div className="flex flex-col overflow-hidden">
                     <span className={`truncate transition-colors group-hover:${theme.colors.highlight} ${theme.colors.subtext}`}>
                       {commit.message}
                     </span>
                     <span className="text-[10px] opacity-40">{new Date(commit.date).toLocaleDateString()}</span>
                   </div>
-                  <span className={`${theme.colors.accent} whitespace-nowrap opacity-80 text-xs border border-current px-2 py-0.5 rounded-full`}>
+                  <span className={`${theme.colors.accent} whitespace-nowrap opacity-80 text-xs border border-current px-2 py-0.5 rounded-full shrink-0`}>
                     {commit.repo}
                   </span>
                 </a>
@@ -212,22 +229,37 @@ export const Dashboard = ({
           <div className="flex items-center gap-3 mb-8">
             <Code size={20} className={`${theme.colors.accent}`} />
             <h3 className={`text-lg font-bold font-mono ${theme.colors.highlight}`}>
-              {copy.dashboardLanguageTitle}
+              {copy.dashboardLanguageTitle ?? 'Language Stats'}
             </h3>
           </div>
 
           {/* Bar Chart */}
-          <div className="flex w-full h-6 rounded-full overflow-hidden mb-6 shadow-inner bg-opacity-20 bg-black group">
-            <div className="h-full bg-[#89b4fa] w-[40%] transition-all duration-1000 ease-out hover:brightness-110 group-hover:animate-shimmer" title="Go" />
-            <div className="h-full bg-[#f9e2af] w-[30%] transition-all duration-1000 ease-out hover:brightness-110 group-hover:animate-shimmer" title="JS" />
-            <div className="h-full bg-[#cba6f7] w-[20%] transition-all duration-1000 ease-out hover:brightness-110 group-hover:animate-shimmer" title="TS" />
-            <div className="h-full bg-[#45475a] w-[10%] transition-all duration-1000 ease-out hover:brightness-110 group-hover:animate-shimmer" title="Other" />
+          <div className="flex w-full h-6 rounded-full overflow-hidden mb-6 shadow-inner bg-opacity-20 bg-black group relative">
+            {languages.length > 0 ? (
+              languages.map((lang, index) => (
+                <div
+                  key={lang.name}
+                  style={{ width: `${lang.percentage}%`, backgroundColor: lang.color }}
+                  className="h-full transition-all duration-1000 ease-out hover:brightness-110 group-hover:animate-shimmer relative"
+                  title={`${lang.name}: ${lang.percentage}%`}
+                />
+              ))
+            ) : (
+              <div className="w-full h-full bg-gray-700 animate-pulse" />
+            )}
           </div>
 
-          <div className="flex gap-6 flex-wrap text-sm font-mono">
-            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#89b4fa] animate-pulse" /><span className={theme.colors.highlight}>{copy.dashboardLanguageGo ?? 'Go 40%'}</span></div>
-            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#f9e2af] animate-pulse" /><span className={theme.colors.highlight}>{copy.dashboardLanguageJs ?? 'JS 30%'}</span></div>
-            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#cba6f7] animate-pulse" /><span className={theme.colors.highlight}>{copy.dashboardLanguageTs ?? 'TS 20%'}</span></div>
+          <div className="flex gap-4 md:gap-6 flex-wrap text-sm font-mono">
+            {languages.length > 0 ? (
+              languages.map(lang => (
+                <div key={lang.name} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: lang.color }} />
+                  <span className={theme.colors.highlight}>{lang.name} <span className="opacity-60">{lang.percentage}%</span></span>
+                </div>
+              ))
+            ) : (
+              <span className={`opacity-50 ${theme.colors.subtext}`}>Loading stats...</span>
+            )}
           </div>
         </SpotlightCard>
       </div>

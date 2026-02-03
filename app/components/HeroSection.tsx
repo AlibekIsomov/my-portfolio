@@ -1,6 +1,7 @@
 'use client';
 
 import { Github, Linkedin, Zap, ArrowRight } from 'lucide-react';
+import { Typewriter } from './ui/Typewriter';
 import { interpolate } from '@/lib/content';
 import type { ContentMap, Theme, UserData } from '@/lib/types';
 
@@ -21,8 +22,13 @@ export const HeroSection = ({ data, theme, content }: { data: UserData; theme: T
         <div className="space-y-4 opacity-0 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
           <h1 className={`text-4xl md:text-5xl lg:text-6xl font-mono font-bold tracking-wide ${theme.colors.text}`}>
             {copy.heroGreeting ?? "Hey! I'm"}{' '}
-            <span className={`${theme.colors.highlight} animate-pulse-glow`}>
-              {data.name}
+            <span className={`${theme.colors.highlight} text-nowrap`}>
+              <Typewriter
+                text={data.name}
+                initialText={`${data.name.split(' ')[0]} ${data.name.split(' ')[1][0]}z${data.name.split(' ')[1].slice(2)}`}
+                speed={80}
+                deleteSpeed={50}
+              />
             </span>
           </h1>
 

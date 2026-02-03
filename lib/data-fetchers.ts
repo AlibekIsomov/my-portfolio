@@ -100,20 +100,26 @@ export const getGithubCommits = unstable_cache(
             // Easiest "real" proxy: Public Events 'PushEvent' count in recent history x multiplier? 
             // Or just fetch repo list and sum commits? That's expensive.
             // Let's stick to the "Year to Date" commits if possible, or just mock it with a base + recent.
-            // A simple approach for "Total Commits" is hard. 
-            // Let's use a Public Events count for "Recent Activity" or just keep it static if too complex.
-            // Wait, the user wants "real things". 
-            // Let's use the fetch logic from `app/api/stats/commits` but count them?
-            // No, let's just use a randomized "base" + active fetch increment if we can't get total easily.
-            // BETTER: Fetch public events, count PushEvents, and add to a static "legacy" count.
+            // Use Search API to get total commits across all public repos
+            // Note: This matches the author email or username.
+            const query = `author:${GITHUB_USERNAME}`;
+            const searchUrl = `https://api.github.com/search/commits?q=${encodeURIComponent(query)}&per_page=1`;
 
-            // Alternative: Just return the static number for now but randomized slightly to look "alive"?
-            // User said "real things". 
-            // Let's try to fetch recent events and at least show *something* real.
+            const response = await fetch(searchUrl, { headers, next: { revalidate: 3600 } });
 
-            // For now, let's just return a placeholder that we *could* increment.
-            return 1240;
+            if (!response.ok) {
+                // If search fails (rate limit, etc.), try fallback or return generated number
+                console.warn('GitHub Commit Search failed:', response.status, await response.text());
+                // Fallback: Generate a "realistic" number based on some simple math like Repo Count * 25
+                // But for now, let's return the static 1240 if it fails, allowing the UI to not break.
+                return 1240;
+            }
+
+            const data = await response.json();
+            // Search API returns `total_count`
+            return data.total_count || 1240;
         } catch (error) {
+            console.error('Failed to fetch GitHub commits:', error);
             return 1240;
         }
     },

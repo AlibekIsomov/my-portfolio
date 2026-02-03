@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
+import YandexMetrica from "./components/YandexMetrica";
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={jetbrainsMono.variable}>
       <body className="antialiased">
+        <YandexMetrica />
         <ThemeProvider>
           {children}
         </ThemeProvider>

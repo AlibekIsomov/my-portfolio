@@ -46,7 +46,7 @@ const DockItem = ({
           initial={{ opacity: 0, y: 10 }}
           animate={isHovered ? { opacity: 1, y: -40 } : { opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className={`absolute whitespace-nowrap px-3 py-1 rounded-lg text-xs font-mono ${theme.colors.surface} border ${theme.colors.border} pointer-events-none`}
+          className={`absolute whitespace-nowrap px-3 py-1 rounded-lg text-xs font-mono ${theme.colors.surface} ${theme.colors.text} border ${theme.colors.border} pointer-events-none`}
         >
           {label}
         </motion.div>

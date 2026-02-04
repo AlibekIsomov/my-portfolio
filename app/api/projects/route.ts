@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag, revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { getAdminSession } from '@/lib/auth';
 
@@ -47,6 +48,8 @@ export const POST = async (request: Request) => {
       },
     });
 
+    revalidateTag('projects', 'seconds');
+    revalidatePath('/', 'layout');
     return NextResponse.json({ project });
   } catch (error) {
     console.error('Error creating project:', error);

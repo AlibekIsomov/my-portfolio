@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag, revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { getAdminSession } from '@/lib/auth';
 
@@ -29,6 +30,9 @@ export const PUT = async (request: Request, { params }: { params: Promise<{ id: 
             },
         });
 
+        revalidateTag('projects', 'seconds');
+        revalidatePath('/', 'layout');
+
         return NextResponse.json({ project });
     } catch (error) {
         console.error('Error updating project:', error);
@@ -45,9 +49,13 @@ export const DELETE = async (_request: Request, { params }: { params: Promise<{ 
     try {
         const resolvedParams = await params;
         const id = parseInt(resolvedParams.id);
+
         await prisma.project.delete({
             where: { id },
         });
+
+        revalidateTag('projects', 'seconds');
+        revalidatePath('/', 'layout');
 
         return NextResponse.json({ success: true });
     } catch (error) {

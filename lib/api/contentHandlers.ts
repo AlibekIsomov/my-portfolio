@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import type { ContentItem } from '@/lib/types';
 import {
   deleteContentItem,
@@ -42,6 +43,7 @@ export const handlePostContent = async (request: Request) => {
 
   try {
     const item = await upsertContentItem({ pageSlug, key, value });
+    revalidatePath('/', 'layout');
     return { status: 201, body: { item: toItem(item) } };
   } catch (error) {
     return { status: 500, body: { error: 'Database unavailable' } };
@@ -61,6 +63,7 @@ export const handlePutContent = async (request: Request, params: { id: string })
 
   try {
     const item = await updateContentItem(Number(id), { pageSlug, key, value });
+    revalidatePath('/', 'layout');
     return { status: 200, body: { item: toItem(item) } };
   } catch (error) {
     return { status: 404, body: { error: 'Content item not found' } };
@@ -71,6 +74,7 @@ export const handleDeleteContent = async (params: { id: string }) => {
   const { id } = params;
   try {
     const item = await deleteContentItem(Number(id));
+    revalidatePath('/', 'layout');
     return { status: 200, body: { item: toItem(item) } };
   } catch (error) {
     return { status: 404, body: { error: 'Content item not found' } };

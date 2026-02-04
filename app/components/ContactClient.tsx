@@ -14,10 +14,12 @@ export const ContactClient = ({
     content,
     userData,
     stats,
+    slug = 'contact',
 }: {
     content: ContentMap;
     userData: UserData;
     stats?: { views: number; clicks: number; commits: number };
+    slug?: string;
 }) => {
     const { theme: t } = useTheme();
 
@@ -27,7 +29,7 @@ export const ContactClient = ({
         message: ''
     });
 
-    const copy = content.contact ?? {};
+    const copy = { ...content.contact, ...(content[slug ?? 'contact'] ?? {}) };
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);

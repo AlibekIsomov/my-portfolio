@@ -10,13 +10,16 @@ export const AboutClient = ({
     content,
     userData,
     stats,
+    slug = 'about',
 }: {
     content: ContentMap;
     userData: UserData;
     stats?: { views: number; clicks: number; commits: number };
+    slug?: string;
 }) => {
     const { theme: t } = useTheme();
-    const copy = content.about ?? {};
+    // Merge content: defaults (about) < backend (slug)
+    const copy = { ...content.about, ...(content[slug ?? 'about'] ?? {}) };
 
     return (
         <div className={`min-h-screen transition-colors duration-500 ${t.colors.bg}`}>

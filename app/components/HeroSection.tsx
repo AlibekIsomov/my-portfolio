@@ -5,8 +5,8 @@ import { Typewriter } from './ui/Typewriter';
 import { interpolate } from '@/lib/content';
 import type { ContentMap, Theme, UserData } from '@/lib/types';
 
-export const HeroSection = ({ data, theme, content }: { data: UserData; theme: Theme; content: ContentMap }) => {
-  const copy = content.home ?? {};
+export const HeroSection = ({ data, theme, content, slug = 'home' }: { data: UserData; theme: Theme; content: ContentMap; slug?: string }) => {
+  const copy = { ...content.home, ...(content[slug ?? 'home'] ?? {}) };
 
   return (
     <header className="py-20 md:py-32 animate-fade-in-up" style={{ animationDelay: '100ms' }}>

@@ -11,14 +11,16 @@ export const Dashboard = ({
   clickCount,
   onCounterClick,
   content,
+  slug = 'home',
 }: {
   data: UserData;
   theme: Theme;
   clickCount: number;
   onCounterClick: () => void;
   content: ContentMap;
+  slug?: string;
 }) => {
-  const copy = content.home ?? {};
+  const copy = { ...content.home, ...(content[slug ?? 'home'] ?? {}) };
 
   // Use local state for immediate feedback, but sync with DB
   const [localClicks, setLocalClicks] = useState(clickCount);
@@ -206,7 +208,7 @@ export const Dashboard = ({
                     <span className={`truncate transition-colors group-hover:${theme.colors.highlight} ${theme.colors.subtext}`}>
                       {commit.message}
                     </span>
-                    <span className="text-[10px] opacity-40">{new Date(commit.date).toLocaleDateString()}</span>
+                    <span className="text-[10px] opacity-40">{new Date(commit.date).toLocaleDateString('en-US')}</span>
                   </div>
                   <span className={`${theme.colors.accent} whitespace-nowrap opacity-80 text-xs border border-current px-2 py-0.5 rounded-full shrink-0`}>
                     {commit.repo}

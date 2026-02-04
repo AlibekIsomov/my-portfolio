@@ -4,6 +4,6 @@ import { clearAdminSessionCookie } from '@/lib/auth';
 export const runtime = 'nodejs';
 
 export const POST = async () => {
-  clearAdminSessionCookie();
+  await clearAdminSessionCookie();
   return NextResponse.json({ ok: true });
 };

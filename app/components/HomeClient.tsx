@@ -14,11 +14,13 @@ export const HomeClient = ({
     userData,
     featuredProjects,
     stats,
+    slug = 'home',
 }: {
     content: ContentMap;
     userData: UserData;
     featuredProjects: Project[];
     stats?: { views: number; clicks: number; commits: number };
+    slug?: string;
 }) => {
     const { theme } = useTheme();
     const [clickCount, setClickCount] = useState(0);
@@ -32,7 +34,7 @@ export const HomeClient = ({
             <Navbar content={content} />
 
             <main className="max-w-5xl mx-auto px-4 md:px-8 pb-20 md:pb-28">
-                <HeroSection data={userData} theme={theme} content={content} />
+                <HeroSection data={userData} theme={theme} content={content} slug={slug} />
                 <FeaturedProjects
                     data={userData}
                     theme={theme}
@@ -45,6 +47,7 @@ export const HomeClient = ({
                     clickCount={clickCount}
                     onCounterClick={handleCounterClick}
                     content={content}
+                    slug={slug}
                 />
             </main>
 

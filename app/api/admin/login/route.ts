@@ -18,7 +18,7 @@ export const POST = async (request: Request) => {
 
   try {
     const token = createSessionToken();
-    setAdminSessionCookie(token);
+    await setAdminSessionCookie(token);
     return NextResponse.json({ ok: true });
   } catch (error) {
     return NextResponse.json({ error: 'Auth configuration missing' }, { status: 500 });

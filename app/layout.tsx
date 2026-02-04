@@ -13,8 +13,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "aiswe — Portfolio",
-  description: "Developer Portfolio built with Next.js",
+  title: "aiswe",
+  description: "Built with Next.js",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={jetbrainsMono.variable}>
+    <html lang="en" className={jetbrainsMono.variable} suppressHydrationWarning>
       <body className="antialiased">
         <YandexMetrica />
         <ThemeProvider>

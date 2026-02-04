@@ -11,14 +11,16 @@ export const ProjectsClient = ({
     userData,
     projects,
     stats,
+    slug = 'projects',
 }: {
     content: ContentMap;
     userData: UserData;
     projects: Project[];
     stats?: { views: number; clicks: number; commits: number };
+    slug?: string;
 }) => {
     const { theme } = useTheme();
-    const copy = content.projects ?? {};
+    const copy = { ...content.projects, ...(content[slug ?? 'projects'] ?? {}) };
 
     return (
         <div className={`min-h-screen transition-colors duration-500 selection:bg-blue-500 selection:text-white ${theme.colors.bg}`}>

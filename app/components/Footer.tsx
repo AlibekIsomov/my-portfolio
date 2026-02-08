@@ -25,7 +25,7 @@ export const Footer = ({ data, theme, content, stats }: FooterProps) => {
     }
   }, []);
 
-  const footerLine = content.global?.footerLine ?? '© 2025 {name} - All Services Nominal';
+  const footerLine = content.global?.footerLine ?? '© 2026 {name} - All Services Nominal';
 
   const links = [
     { label: 'Home', href: '/' },

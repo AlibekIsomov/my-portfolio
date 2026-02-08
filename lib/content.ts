@@ -10,7 +10,7 @@ export const DEFAULT_CONTENT: ContentMap = {
     featuredProjectsTitle: 'Featured Projects',
     featuredProjectsLink: 'View all →',
     dashboardTitle: 'Dashboard',
-    footerLine: '© 2025 {name} - All Services Nominal',
+    footerLine: '© 2026 {name} - All Services Nominal',
   },
   profile: {
     name: 'Alibek Isomov',

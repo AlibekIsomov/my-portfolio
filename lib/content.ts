@@ -14,7 +14,7 @@ export const DEFAULT_CONTENT: ContentMap = {
   },
   profile: {
     name: 'Alibek Isomov',
-    role: 'Middle Software Engineer',
+    role: 'Software Engineer',
     company: 'Gross Insurance',
     bio: 'I build software that helps people at scale. Obsessed with clean code, developer experience, and aesthetics.',
     location: 'Tashkent, Uzbekisan',

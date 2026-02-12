@@ -23,7 +23,7 @@ VALUES
   ('global', 'footerLine', '© 2025 {name} - All Services Nominal'),
   ('global', 'footerStats', '{views} views • {commits} commits'),
   ('profile', 'name', 'Alibek Isomov'),
-  ('profile', 'role', 'Middle Software Engineer'),
+  ('profile', 'role', 'Software Engineer'),
   ('profile', 'company', 'Gross Insurance'),
   ('profile', 'bio', 'I build software that helps people at scale. Obsessed with clean code, developer experience, and aesthetics.'),
   ('profile', 'location', 'Tashkent, Uzbekisan'),
